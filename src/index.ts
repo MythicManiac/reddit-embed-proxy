@@ -67,6 +67,11 @@ export default {
       return Response.redirect(redditUrl, 307);
     }
 
+    if (url.pathname.indexOf("/s/") >= 0) {
+      const redirected = await fetch(url);
+      url.pathname = new URL(redirected.url).pathname;
+    }
+
     if (!url.pathname.endsWith(".json")) {
       url.pathname = `${url.pathname}.json`;
     }
