@@ -55,6 +55,10 @@ function escape(content: string): string {
     .replace(/'/g, "&#039;");
 }
 
+const redditHeaders = {
+  "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.3",
+}
+
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
@@ -62,7 +66,7 @@ export default {
     url.protocol = "https:"
 
     if (url.pathname.indexOf("/s/") >= 0) {
-      const redirect = await fetch(url);
+      const redirect = await fetch(url, { headers: redditHeaders });
       console.log(`Redirect status code: ${redirect.status} - ${redirect.statusText}`);
       console.log(`Redirect URL: ${redirect.url}`);
       url.pathname = new URL(redirect.url).pathname;
@@ -78,9 +82,7 @@ export default {
       url.pathname = `${url.pathname}.json`;
     }
     const redditResponse = await fetch(url.toString(), {
-      headers: {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.3",
-      }
+      headers: redditHeaders
     });
     const responseJson = await redditResponse.json() as RedditResponse;
     const post = responseJson[0].data.children[0].data;
