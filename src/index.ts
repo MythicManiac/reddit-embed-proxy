@@ -61,15 +61,15 @@ export default {
     url.host = "reddit.com";
     url.protocol = "https:"
 
+    if (url.pathname.indexOf("/s/") >= 0) {
+      const redirect = await fetch(url);
+      url.pathname = new URL(redirect.headers.get("location")!).pathname;
+    }
+
     const redditUrl = url.toString();
 
     if ((request.headers.get("user-agent")?.toLowerCase().indexOf("discord") || -1) < 0) {
       return Response.redirect(redditUrl, 307);
-    }
-
-    if (url.pathname.indexOf("/s/") >= 0) {
-      const redirected = await fetch(url);
-      url.pathname = new URL(redirected.url).pathname;
     }
 
     if (!url.pathname.endsWith(".json")) {
