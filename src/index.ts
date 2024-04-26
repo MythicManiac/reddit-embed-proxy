@@ -27,6 +27,9 @@ export interface Env {
 
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
-    return await fetch("https://reddit.com", request);
+    const url = new URL(request.url);
+    url.host = "reddit.com";
+    url.protocol = "https:"
+    return await fetch(url.toString());
   },
 };
