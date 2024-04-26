@@ -50,6 +50,9 @@ export default {
     const url = new URL(request.url);
     url.host = "reddit.com";
     url.protocol = "https:"
+
+    const redditUrl = url.toString();
+
     if (!url.pathname.endsWith(".json")) {
       url.pathname = `${url.pathname}.json`;
     }
@@ -80,6 +83,7 @@ export default {
 <meta property="og:title" content="${post.title}" />
 <meta property="og:description" content="${post.selftext || post.title}" />
 <meta property="og:site_name" content="Reddit" />
+<meta property="og:url" content="${redditUrl}" />
 ${preview}
 ${type}
 </head>
