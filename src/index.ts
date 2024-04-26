@@ -63,7 +63,9 @@ export default {
 
     if (url.pathname.indexOf("/s/") >= 0) {
       const redirect = await fetch(url);
-      url.pathname = new URL(redirect.headers.get("location")!).pathname;
+      console.log(`Redirect status code: ${redirect.status} - ${redirect.statusText}`);
+      console.log(`Redirect URL: ${redirect.url}`);
+      url.pathname = new URL(redirect.url).pathname;
     }
 
     const redditUrl = url.toString();
