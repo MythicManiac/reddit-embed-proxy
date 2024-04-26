@@ -63,6 +63,10 @@ export default {
 
     const redditUrl = url.toString();
 
+    if ((request.headers.get("user-agent")?.toLowerCase().indexOf("discord") || -1) < 0) {
+      return Response.redirect(redditUrl, 307);
+    }
+
     if (!url.pathname.endsWith(".json")) {
       url.pathname = `${url.pathname}.json`;
     }
