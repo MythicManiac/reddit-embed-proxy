@@ -64,7 +64,7 @@ export default {
     const image = post.preview?.images[0];
 
     const preview = image ? `
-<meta property="og:image" content="${image.source.url} />
+<meta property="og:image" content="${image.source.url}" />
 <meta property="og:image:width" content="${image.source.width}" />
 <meta property="og:image:height" content="${image.source.height}" />
 ` : ""
@@ -73,7 +73,7 @@ export default {
 <html>
 <head>
 <meta property="og:title" content="${post.title}" />
-<meta property="og:description" content="${post.selftext}"
+<meta property="og:description" content="${post.selftext}" />
 ${preview}
 </head>
 </html>
