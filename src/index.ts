@@ -25,6 +25,26 @@ export interface Env {
   // MY_QUEUE: Queue;
 }
 
+type RedditResponse = {
+  data: {
+    children: {
+      data: {
+        title: string,
+        selftext: string,
+        preview?: {
+          images: {
+            source: {
+              url: string,
+              width: number,
+              height: number,
+            },
+          }[],
+        },
+      },
+    }[],
+  },
+}[];
+
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
@@ -33,10 +53,32 @@ export default {
     if (!url.pathname.endsWith(".json")) {
       url.pathname = `${url.pathname}.json`;
     }
-    return await fetch(url.toString(), {
+    const redditResponse = await fetch(url.toString(), {
       headers: {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.3",
       }
     });
+    const responseJson = await redditResponse.json() as RedditResponse;
+    const post = responseJson[0].data.children[0].data;
+
+    const image = post.preview?.images[0];
+
+    const preview = image ? `
+<meta property="og:image" content="${image.source.url} />
+<meta property="og:image:width" content="${image.source.width}" />
+<meta property="og:image:height" content="${image.source.height}" />
+` : ""
+
+    const html = `
+<html>
+<head>
+<meta property="og:title" content="${post.title}" />
+<meta property="og:description" content="${post.selftext}"
+${preview}
+</head>
+</html>
+`;
+
+    return new Response(html, { headers: {"content-type": "text/html;charset=UTF-8" }});
   },
 };
