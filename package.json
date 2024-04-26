@@ -13,9 +13,6 @@
 		"typescript": "^5.0.4",
 		"wrangler": "^3.0.0"
 	},
-	"overrides": {
-		"@types/node": "20.8.3"
-	},
 	"dependencies": {
 		"@types/node": "^20.8.3"
 	}
