@@ -67,14 +67,21 @@ export default {
 <meta property="og:image" content="${image.source.url}" />
 <meta property="og:image:width" content="${image.source.width}" />
 <meta property="og:image:height" content="${image.source.height}" />
-` : ""
+` : "";
+
+    const isPhoto = image && !post.selftext;
+    const type = isPhoto ? `
+<meta property="og:type" content="photo" />
+` : "";
 
     const html = `
 <html>
 <head>
 <meta property="og:title" content="${post.title}" />
-<meta property="og:description" content="${post.selftext}" />
+<meta property="og:description" content="${post.selftext || post.title}" />
+<meta property="og:site_name" content="Reddit" />
 ${preview}
+${type}
 </head>
 </html>
 `;
