@@ -30,6 +30,13 @@ export default {
     const url = new URL(request.url);
     url.host = "reddit.com";
     url.protocol = "https:"
-    return await fetch(url.toString());
+    if (!url.pathname.endsWith(".json")) {
+      url.pathname = `${url.pathname}.json`;
+    }
+    return await fetch(url.toString(), {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.3",
+      }
+    });
   },
 };
