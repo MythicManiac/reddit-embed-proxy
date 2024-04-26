@@ -45,6 +45,16 @@ type RedditResponse = {
   },
 }[];
 
+
+function escape(content: string): string {
+  return content
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
@@ -80,8 +90,8 @@ export default {
     const html = `
 <html>
 <head>
-<meta property="og:title" content="${post.title}" />
-<meta property="og:description" content="${post.selftext || post.title}" />
+<meta property="og:title" content="${escape(post.title)}" />
+<meta property="og:description" content="${escape(post.selftext) || escape(post.title)}" />
 <meta property="og:site_name" content="Reddit" />
 <meta property="og:url" content="${redditUrl}" />
 ${preview}
